@@ -1,4 +1,4 @@
-INSERT INTO bookmarks_list(id,title,url,description,rating)
+INSERT INTO bookmarks_list(title,url,description,rating)
 
 VALUES
 ('thinkful', 'https://overview.thinkful.com/','course', 3),
