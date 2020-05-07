@@ -74,4 +74,7 @@ describe.only('bookmark Endpoints', function() {
       });
     });
   });
+  //get /bookmarks/:id finishes here
+
+
 });
