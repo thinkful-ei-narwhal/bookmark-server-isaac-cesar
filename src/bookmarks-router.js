@@ -9,6 +9,15 @@ const bookmarkServices = require('./bookmarks-services');
 const bookmarksRouter = express.Router();
 const bodyParser = express.json();
 
+
+const serializeBookmark = bookmark => ({
+  id: bookmark.id,
+  title: bookmark.title,
+  url: bookmark.url,
+  description: bookmark.description,
+  rating: Number(bookmark.rating),
+});
+
 bookmarksRouter
   .route('/')
   .get((req, res) => {
@@ -63,14 +72,15 @@ bookmarksRouter
   .get((req, res,next) => {
     const { id } = req.params;
     bookmarkServices.getById(req.app.get('db'),id)
-      .then(bookmarks=>res.json(bookmarks))
       .then(bookmark => {
         if (!bookmark) {
           logger.error('bookmark was not found');
-          return res.status(400).send('bookmark was not found');
+          return res.status(404).json({
+            error: { message: 'bookmark was not found' }
+          });
         }
 
-        res.json(bookmark);
+        res.json(serializeBookmark(bookmark));
       })
       .catch(next);
   })

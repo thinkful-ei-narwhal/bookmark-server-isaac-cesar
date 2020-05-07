@@ -30,7 +30,7 @@ describe.only('bookmark Endpoints', function() {
           .expect(200,[]);
       });
     });
-    context('when db is empty',()=>{
+    context('when db is not empty',()=>{
       const insertBookmarks=makeBookmarksArray();
       beforeEach('insert bookmarks', () => {
         return db
@@ -44,7 +44,34 @@ describe.only('bookmark Endpoints', function() {
           .expect(200,insertBookmarks);
       });
     });
-
   });
+  //get /bookmarks finishes here
+  describe('GET /bookmarks/:id',()=>{
+    context('when db is not emptys', () => {
+      it('responds with 404', () => {
+        const bookmarkId = 65;
+        return supertest(app)
+          .get(`/bookmarks/${bookmarkId}`)
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(404, { error: { message: 'bookmark was not found' } });
+      });
+    });
 
+    context('when db is not empty',()=>{
+      const insertBookmarks=makeBookmarksArray();
+      beforeEach('insert bookmarks', () => {
+        return db
+          .into('bookmarks_list')
+          .insert(insertBookmarks);
+      });
+      it('returns with 200 and the bookmark',()=>{
+        const bookmarkId=2;
+        const expectedBookmark =insertBookmarks[bookmarkId - 1];
+        return supertest(app)
+          .get(`/bookmarks/${bookmarkId}`)
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(200,expectedBookmark);
+      });
+    });
+  });
 });
