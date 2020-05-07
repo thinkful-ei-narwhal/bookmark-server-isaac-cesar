@@ -1,8 +1,7 @@
-const { expect } = require('chai');
 const knex = require('knex');
 const app = require('../src/app');
 const { makeBookmarksArray } = require('./bookmarks.fixtures');
-const BookmarksServices = require('../');
+const BookmarksServices = require('../src/bookmarks-services');
 
 
 describe('bookmark Endpoints', function() {
@@ -14,17 +13,23 @@ describe('bookmark Endpoints', function() {
       client: 'pg',
       connection: process.env.TEST_DB_URL,
     });
+    app.set('db', db);
   });
 
   before('clean the table', () => db('bookmarks_list').truncate());
   afterEach('cleanup', () => db('bookmarks_list').truncate());
   after('disconnect from db', () => db.destroy());
 
-  describe('GET /bookmarks',()=>{
+
+  describe.only('GET /bookmarks',()=>{
     context('when db is empty',()=>{
 
       it('returns empty array',()=>{
-        return; 
+        console.log(process.env.TEST_DB_URL);
+        return supertest(app)
+          .get('/bookmarks')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(200,[]);
       });
     });
   });
