@@ -1,20 +1,18 @@
-const { v4: uuid } = require('uuid');
-
 function makeBookmarksArray() {
   return [
-    {id: uuid(),
+    {id: 1,
       title: 'github',
       url: 'https://github.com/',
       description: 'github homepage',
       rating: 5 
     },
-    {id: uuid(),
+    {id: 2,
       title: 'youtube',
       url: 'https://youtube.com/',
       description: 'youtube homepage',
       rating: 3 
     },
-    {id: uuid(),
+    {id:3,
       title: 'google',
       url: 'https://google.com/',
       description: 'google homepage',

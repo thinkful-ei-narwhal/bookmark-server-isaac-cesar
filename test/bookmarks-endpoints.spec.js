@@ -4,7 +4,7 @@ const { makeBookmarksArray } = require('./bookmarks.fixtures');
 const BookmarksServices = require('../src/bookmarks-services');
 
 
-describe('bookmark Endpoints', function() {
+describe.only('bookmark Endpoints', function() {
 
   let db;
 
@@ -21,17 +21,30 @@ describe('bookmark Endpoints', function() {
   after('disconnect from db', () => db.destroy());
 
 
-  describe.only('GET /bookmarks',()=>{
+  describe('GET /bookmarks',()=>{
     context('when db is empty',()=>{
-
       it('returns empty array',()=>{
-        console.log(process.env.TEST_DB_URL);
         return supertest(app)
           .get('/bookmarks')
           .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
           .expect(200,[]);
       });
     });
+    context('when db is empty',()=>{
+      const insertBookmarks=makeBookmarksArray();
+      beforeEach('insert bookmarks', () => {
+        return db
+          .into('bookmarks_list')
+          .insert(insertBookmarks);
+      });
+      it('returns with 200 and all bookmarks',()=>{
+        return supertest(app)
+          .get('/bookmarks')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(200,insertBookmarks);
+      });
+    });
+
   });
 
 });

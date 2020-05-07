@@ -7,6 +7,7 @@ const BookmarksService = {
   insertBookmark(db, data) {
     return db('bookmarks_list')
       .insert(data)
+      .into('bookmarks')
       .returning('*')
       .then(rows => rows[0]);
   },
